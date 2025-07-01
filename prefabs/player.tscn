@@ -1,15 +1,16 @@
-[gd_scene load_steps=20 format=3 uid="uid://bwn18st4qu1ui"]
+[gd_scene load_steps=23 format=3 uid="uid://bwn18st4qu1ui"]
 
 [ext_resource type="Script" uid="uid://clvi3qg2t3ald" path="res://scripts/player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://8e0xkacb3b1f" path="res://scripts/redical_aim.gd" id="2_4dohe"]
 [ext_resource type="Texture2D" uid="uid://d2flt438taw5v" path="res://images/Без назви-1.png" id="3_r66lb"]
 [ext_resource type="Script" uid="uid://b5t8mhkxhs1ac" path="res://scripts/debug.gd" id="4_1txc5"]
-[ext_resource type="Script" uid="uid://c850e3dw48krv" path="res://scripts/state_machine.gd" id="5_ht1c8"]
-[ext_resource type="Script" uid="uid://dpueeliqvabb1" path="res://scripts/IdlePlayerState.gd" id="6_g2jcq"]
-[ext_resource type="Script" uid="uid://ch8g1wx0ynm31" path="res://scripts/WalkPlayerState.gd" id="7_u51tk"]
-[ext_resource type="Script" uid="uid://cnr3fsg853dnw" path="res://prefabs/CrouchPlayerState.gd" id="8_kbsxf"]
+[ext_resource type="Script" uid="uid://c850e3dw48krv" path="res://scripts/StateMachine/state_machine.gd" id="5_ht1c8"]
+[ext_resource type="Script" uid="uid://dpueeliqvabb1" path="res://scripts/StateMachine/IdlePlayerState.gd" id="6_g2jcq"]
+[ext_resource type="Script" uid="uid://ch8g1wx0ynm31" path="res://scripts/StateMachine/WalkPlayerState.gd" id="7_u51tk"]
+[ext_resource type="Script" uid="uid://cnr3fsg853dnw" path="res://scripts/StateMachine/CrouchPlayerState.gd" id="8_kbsxf"]
 [ext_resource type="Script" uid="uid://b7tyqc4clps5" path="res://prefabs/SlidePlayerState.gd" id="9_rgeog"]
-[ext_resource type="Script" uid="uid://4p1r6nq64cd" path="res://prefabs/JumpPlayerState.gd" id="10_opo22"]
+[ext_resource type="Script" uid="uid://4p1r6nq64cd" path="res://scripts/StateMachine/JumpPlayerState.gd" id="10_opo22"]
+[ext_resource type="Script" uid="uid://b3lfrxx6mn1et" path="res://scripts/StateMachine/FallPlayerState.gd" id="11_8rb0w"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
 
@@ -267,8 +268,66 @@ tracks/7/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_8rb0w"]
+resource_name = "JumpStart"
+length = 0.55
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CameraControl:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.55),
+"transitions": PackedFloat32Array(1, 1, 0.267943),
+"update": 0,
+"values": [Vector3(0, 0.453128, 0), Vector3(0, 0.463, 0), Vector3(0, 0.453128, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CameraControl:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.55),
+"transitions": PackedFloat32Array(1, 1, 0.267),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.00872665, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_sd3sa"]
+resource_name = "JumpEnd"
+length = 0.55
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CameraControl:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.453128, 0), Vector3(0, 0.443, 0), Vector3(0, 0.453128, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CameraControl:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.00872665, 0, 0), Vector3(0, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_onrkg"]
 _data = {
+&"JumpEnd": SubResource("Animation_sd3sa"),
+&"JumpStart": SubResource("Animation_8rb0w"),
 &"RESET": SubResource("Animation_onrkg"),
 &"crouch": SubResource("Animation_4flbx"),
 &"slide": SubResource("Animation_rgeog")
@@ -384,8 +443,13 @@ SPEED = 8
 ANIMATION = NodePath("../../AnimationPlayer")
 metadata/_custom_type_script = "uid://dcrnyinwqrsek"
 
-[node name="JumpPlayerState" type="Node" parent="PlayerStateMachine"]
+[node name="JumpPlayerState" type="Node" parent="PlayerStateMachine" node_paths=PackedStringArray("ANIMATION")]
 script = ExtResource("10_opo22")
+ANIMATION = NodePath("../../AnimationPlayer")
+metadata/_custom_type_script = "uid://dcrnyinwqrsek"
+
+[node name="FallPlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("11_8rb0w")
 metadata/_custom_type_script = "uid://dcrnyinwqrsek"
 
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_animation_player_animation_started"]

@@ -26,6 +26,9 @@ func update(delta) -> void:
 	
 	if Input.is_action_just_pressed("jump") and PLAYER.is_on_floor():
 		transition.emit("JumpPlayerState")
+	
+	if PLAYER.velocity.y < -3 and !PLAYER.is_on_floor():
+		transition.emit("FallPlayerState")
 
 func set_tilt(player_rotation) -> void:
 	var tilt = Vector3.ZERO
