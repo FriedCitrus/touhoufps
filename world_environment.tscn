@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwtyp6xw3sqeb"]
+
+[ext_resource type="Texture2D" uid="uid://bbf2w83lt3umf" path="res://images/citrus_orchard_puresky_2k.hdr" id="1_x16oa"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_te0mf"]
+panorama = ExtResource("1_x16oa")
+
+[sub_resource type="Sky" id="Sky_te0mf"]
+sky_material = SubResource("PanoramaSkyMaterial_te0mf")
+
+[sub_resource type="Environment" id="Environment_x16oa"]
+background_mode = 2
+background_color = Color(0.601264, 0.927727, 0.864568, 1)
+sky = SubResource("Sky_te0mf")
+ambient_light_source = 2
+ambient_light_color = Color(0.548963, 0.548963, 0.548963, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment"]
+environment = SubResource("Environment_x16oa")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.145565, 0.909944, -0.388346, -0.0229354, 0.395525, 0.918169, 0.989083, -0.124746, 0.0784444, 0, 0, 0)
+light_color = Color(0.389488, 0.702576, 0.675682, 1)
