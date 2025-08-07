@@ -2,14 +2,13 @@ class_name State
 
 extends Node
 
-signal transition(new_state_name: StringName)
+var player : Player
+var camera : CameraControl
 
-func enter(previous_state)-> void:
-	pass
+@onready var dash_timer = %DashTimer
+@onready var cooldown_timer = %DashCooldown
 
-func exit()->void:
-	pass
-func update(delta)->void:
-	pass
-func physics_update(delta)->void:
-	pass
+func _ready() -> void:
+	if %StateMachine and %StateMachine is StateMachine:
+		player = %StateMachine.player
+		camera = %StateMachine.camera

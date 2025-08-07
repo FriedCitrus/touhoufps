@@ -1,34 +1,15 @@
-class_name StateMachine
+class_name StateMachine extends Node
 
-extends Node
-
-@export var CURRENT_STATE: State
-var states: Dictionary = {}
-
-func _ready() -> void:
-	for child in get_children():
-		if child is State:
-			states[child.name] = child
-			child.transition.connect(on_child_transition)
-		else:
-			push_warning("State Machine contains incomplete child node")
-			
-	await owner.ready
-	
-	CURRENT_STATE.enter(null)
+@export var debug: bool = false
+@export_category("References")
+@export var player: Player
+@export var camera: CameraControl
 
 func _process(delta: float) -> void:
-	CURRENT_STATE.update(delta)
-	Gloabal.debug.add_prop("Current State", CURRENT_STATE.name, 1)
-func _physics_process(delta: float) -> void:
-	CURRENT_STATE.physics_update(delta)
-
-func on_child_transition(new_state_name: StringName) -> void:
-	var  new_state = states.get(new_state_name)
-	if new_state != null:
-		if new_state != CURRENT_STATE:
-			CURRENT_STATE.exit()
-			new_state.enter(CURRENT_STATE)
-			CURRENT_STATE = new_state
-	else:
-		push_warning("State does not exist")
+	if player:
+		player.state_chart.set_expression_property("velocity", player.velocity.length())
+		player.state_chart.set_expression_property("hitting head",player.crouch_check.is_colliding())
+		player.state_chart.set_expression_property("FPS", Engine.get_frames_per_second())
+		player.state_chart.set_expression_property("Looking At", player.interaction_cast.curr_object)
+		player.state_chart.set_expression_property("Dash Timer", player.dash_time_timer.time_left)
+		player.state_chart.set_expression_property("Dash Cooldown", player.dash_cooldown_timer.time_left)

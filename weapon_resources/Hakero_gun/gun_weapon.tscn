@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://bx40wxs8v1531"]
+
+[ext_resource type="ArrayMesh" uid="uid://dkrwjkkwbbmtw" path="res://weapon_resources/Hakero_gun/gun_meshes/hakero_box_mesh.res" id="1_7wb6s"]
+[ext_resource type="ArrayMesh" uid="uid://ddel004s5edui" path="res://weapon_resources/Hakero_gun/gun_meshes/hakero_frame_mesh.res" id="2_pxbax"]
+[ext_resource type="ArrayMesh" uid="uid://h2onnsbe84ig" path="res://weapon_resources/Hakero_gun/gun_meshes/hakero_runes_mesh.res" id="3_12wxl"]
+[ext_resource type="ArrayMesh" uid="uid://cb0g2mk2ai6kl" path="res://weapon_resources/Hakero_gun/gun_meshes/frame_mesh.res" id="4_q1xdp"]
+[ext_resource type="ArrayMesh" uid="uid://j1qanahks6r4" path="res://weapon_resources/Hakero_gun/gun_meshes/trigger_mesh.res" id="5_4ct3b"]
+[ext_resource type="ArrayMesh" uid="uid://72l4524mvfu8" path="res://weapon_resources/Hakero_gun/gun_meshes/muzzle_mesh.res" id="6_5cvq0"]
+[ext_resource type="ArrayMesh" uid="uid://ldxe4h7wd1ce" path="res://weapon_resources/Hakero_gun/gun_meshes/grip_mesh.res" id="7_yp3yj"]
+
+[node name="gun_weapon" type="Node3D"]
+
+[node name="the gun" type="Node3D" parent="."]
+
+[node name="Hakero" type="Node3D" parent="the gun"]
+transform = Transform3D(-2.60108e-08, 1, -1.33935e-07, 0.887011, -3.87725e-08, -0.461749, -0.461749, -1.30812e-07, -0.887011, 3.0375, 1.62291, 0)
+
+[node name="Hakero_Box" type="MeshInstance3D" parent="the gun/Hakero"]
+mesh = ExtResource("1_7wb6s")
+skeleton = NodePath("../..")
+
+[node name="Hakero_Frame" type="MeshInstance3D" parent="the gun/Hakero"]
+mesh = ExtResource("2_pxbax")
+skeleton = NodePath("../..")
+
+[node name="Hakero_Runes" type="MeshInstance3D" parent="the gun/Hakero"]
+mesh = ExtResource("3_12wxl")
+skeleton = NodePath("../..")
+
+[node name="Main" type="Node3D" parent="the gun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.63127, 0.717426, 0)
+
+[node name="Frame" type="MeshInstance3D" parent="the gun/Main"]
+mesh = ExtResource("4_q1xdp")
+skeleton = NodePath("../..")
+
+[node name="Barel_Glow" type="MeshInstance3D" parent="the gun/Main"]
+skeleton = NodePath("../..")
+
+[node name="Trigger" type="MeshInstance3D" parent="the gun/Main"]
+transform = Transform3D(0.143007, 6.11163e-09, 0.139818, 0.139818, -6.25103e-09, -0.143007, 6.76054e-16, 0.2, -8.74228e-09, 8.94754, -1.12415, -0.00905919)
+mesh = ExtResource("5_4ct3b")
+
+[node name="Muzzle" type="MeshInstance3D" parent="the gun/Main"]
+mesh = ExtResource("6_5cvq0")
+
+[node name="Grip" type="MeshInstance3D" parent="the gun/Main"]
+mesh = ExtResource("7_yp3yj")
