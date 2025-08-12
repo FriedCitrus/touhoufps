@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c0ui13ujugavn"]
+[gd_scene load_steps=12 format=3 uid="uid://c0ui13ujugavn"]
 
 [ext_resource type="Shader" uid="uid://c65blv4ep1guj" path="res://shaders/testscene.gdshader" id="1_7y2xs"]
 [ext_resource type="PackedScene" uid="uid://bwtyp6xw3sqeb" path="res://world_environment.tscn" id="2_r32pp"]
@@ -17,6 +17,10 @@ shader = ExtResource("1_7y2xs")
 [sub_resource type="BoxMesh" id="BoxMesh_l2n4a"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ye8wr"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ye8wr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ckmbu"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -187,3 +191,12 @@ shape = SubResource("BoxShape3D_ye8wr")
 
 [node name="Player" parent="." instance=ExtResource("3_65iv0")]
 transform = Transform3D(1.2, 0, 0, 0, 1.5, 0, 0, 0, 1.2, 0, 1.31634, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 6.8702, 0, 0, 0, 14.5483, -15.2736, 3.22637, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_ye8wr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_ckmbu")

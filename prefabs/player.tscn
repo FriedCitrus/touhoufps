@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://bwn18st4qu1ui"]
+[gd_scene load_steps=42 format=3 uid="uid://bwn18st4qu1ui"]
 
 [ext_resource type="Script" uid="uid://clvi3qg2t3ald" path="res://scripts/player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://8e0xkacb3b1f" path="res://scripts/redical_aim.gd" id="2_4dohe"]
@@ -25,6 +25,7 @@
 [ext_resource type="Script" uid="uid://kpqgnvbsuqdy" path="res://prefabs/slide_state.gd" id="21_r3tw4"]
 [ext_resource type="Script" uid="uid://djs876lhy8wnk" path="res://prefabs/airborne_state.gd" id="23_gf0v6"]
 [ext_resource type="Script" uid="uid://ltw8xjxn1mji" path="res://prefabs/air_dash_state.gd" id="25_g56qp"]
+[ext_resource type="Script" uid="uid://e15xwx6emtrm" path="res://prefabs/wallstick_state.gd" id="26_axxvs"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
 
@@ -153,7 +154,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("ShapeCast3D:position")
+tracks/5/path = NodePath("CrouchCast3D:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -280,7 +281,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("ShapeCast3D:position")
+tracks/4/path = NodePath("CrouchCast3D:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -311,6 +312,8 @@ _data = {
 &"slide": SubResource("Animation_rgeog")
 }
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_g56qp"]
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_72ieh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ht1c8"]
@@ -336,7 +339,7 @@ cache/0/16/0/scale = 1.0
 [sub_resource type="Theme" id="Theme_r3tw4"]
 TabBar/fonts/font = SubResource("FontFile_22xyk")
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("interaction_cast", "camera", "state_chart", "regular_hitbox", "crouch_hitbox", "crouch_check")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("interaction_cast", "camera", "state_chart", "regular_hitbox", "crouch_hitbox", "crouch_check", "wall_check")]
 transform = Transform3D(1.2, 0, 0, 0, 1.5, 0, 0, 0, 1.2, 0, 0, 0)
 script = ExtResource("1_4flbx")
 interaction_cast = NodePath("CameraControl/Camera3D/InteractionCast3D")
@@ -345,8 +348,9 @@ camera = NodePath("CameraControl")
 state_chart = NodePath("StateChart")
 regular_hitbox = NodePath("CollisionShape3D")
 crouch_hitbox = NodePath("CrouchCollision")
-crouch_check = NodePath("ShapeCast3D")
+crouch_check = NodePath("CrouchCast3D")
 jump_vel = 6.5
+wall_check = NodePath("WallCast3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_sh265")
@@ -386,7 +390,12 @@ libraries = {
 &"": SubResource("AnimationLibrary_onrkg")
 }
 
-[node name="ShapeCast3D" type="ShapeCast3D" parent="."]
+[node name="WallCast3D" type="ShapeCast3D" parent="."]
+transform = Transform3D(1.3, 0, 0, 0, 1, 0, 0, 0, 0.725, 0, 0, 0)
+shape = SubResource("BoxShape3D_g56qp")
+target_position = Vector3(0, 0, 0)
+
+[node name="CrouchCast3D" type="ShapeCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 shape = SubResource("SphereShape3D_72ieh")
 target_position = Vector3(0, 0.5, 0)
@@ -555,6 +564,39 @@ metadata/_custom_type_script = "uid://cf1nsco3w0mf6"
 script = ExtResource("11_lulei")
 metadata/_custom_type_script = "uid://cytafq8i1y8qm"
 
+[node name="OnWallstick" type="Node" parent="StateChart/root/Movement/Airborne"]
+script = ExtResource("12_edtk3")
+to = NodePath("../Wallstick")
+event = &"onWallstick"
+delay_in_seconds = "0.0"
+metadata/_custom_type_script = "uid://cf1nsco3w0mf6"
+
+[node name="Wallstick" type="Node" parent="StateChart/root/Movement/Airborne"]
+script = ExtResource("11_lulei")
+metadata/_custom_type_script = "uid://cytafq8i1y8qm"
+
+[node name="OnAirJump" type="Node" parent="StateChart/root/Movement/Airborne"]
+script = ExtResource("12_edtk3")
+to = NodePath("../AirJump")
+event = &"onAirJump"
+delay_in_seconds = "0.0"
+metadata/_custom_type_script = "uid://cf1nsco3w0mf6"
+
+[node name="AirJump" type="Node" parent="StateChart/root/Movement/Airborne"]
+script = ExtResource("11_lulei")
+metadata/_custom_type_script = "uid://cytafq8i1y8qm"
+
+[node name="OnwallJump" type="Node" parent="StateChart/root/Movement/Airborne"]
+script = ExtResource("12_edtk3")
+to = NodePath("../WallJump")
+event = &"onWallJump"
+delay_in_seconds = "0.0"
+metadata/_custom_type_script = "uid://cf1nsco3w0mf6"
+
+[node name="WallJump" type="Node" parent="StateChart/root/Movement/Airborne"]
+script = ExtResource("11_lulei")
+metadata/_custom_type_script = "uid://cytafq8i1y8qm"
+
 [node name="Squats" type="Node" parent="StateChart/root"]
 script = ExtResource("10_x0bak")
 initial_state = NodePath("Crouch")
@@ -635,6 +677,11 @@ script = ExtResource("23_gf0v6")
 [node name="AirDashState" type="Node" parent="StateMachine/AirborneState"]
 script = ExtResource("25_g56qp")
 
+[node name="WallstickState" type="Node" parent="StateMachine/AirborneState"]
+script = ExtResource("26_axxvs")
+
+[node name="WallJumpState" type="Node" parent="StateMachine/AirborneState"]
+
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_animation_player_animation_started"]
 [connection signal="timeout" from="Components/Counters/Node/DashTimer" to="StateMachine/MovementState/GroundedState/MovingState/DashState" method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="Components/Counters/Node/DashTimer" to="StateMachine/AirborneState/AirDashState" method="_on_dash_timer_timeout"]
@@ -649,6 +696,8 @@ script = ExtResource("25_g56qp")
 [connection signal="state_processing" from="StateChart/root/Movement/Grounded/Moving/Dash" to="StateMachine/MovementState/GroundedState/MovingState/DashState" method="_on_dash_state_processing"]
 [connection signal="state_physics_processing" from="StateChart/root/Movement/Airborne" to="StateMachine/AirborneState" method="_on_airborne_state_physics_processing"]
 [connection signal="state_entered" from="StateChart/root/Movement/Airborne/AirDash" to="StateMachine/AirborneState/AirDashState" method="_on_air_dash_state_entered"]
+[connection signal="state_entered" from="StateChart/root/Movement/Airborne/Wallstick" to="StateMachine/AirborneState/WallstickState" method="_on_wallstick_state_entered"]
+[connection signal="state_exited" from="StateChart/root/Movement/Airborne/Wallstick" to="StateMachine/AirborneState/WallstickState" method="_on_wallstick_state_exited"]
 [connection signal="state_entered" from="StateChart/root/Squats/Crouch" to="StateMachine/SquatState/CrouchState" method="_on_crouch_state_entered"]
 [connection signal="state_physics_processing" from="StateChart/root/Squats/Crouch" to="StateMachine/SquatState/CrouchState" method="_on_crouch_state_physics_processing"]
 [connection signal="state_entered" from="StateChart/root/Squats/Uncrouch" to="StateMachine/SquatState/UncrouchState" method="_on_uncrouch_state_entered"]

@@ -11,7 +11,6 @@ var speed = 0
 const DEFAULT_HEIGHT = 0.5
 
 @export var interaction_cast: RayCast3D 
-
 @export_category("Speed")
 
 @export_group("Variables")
@@ -38,18 +37,27 @@ const DEFAULT_HEIGHT = 0.5
 @onready var dash_cooldown_timer = %DashCooldown
 
 @export_category("Crouch")
+
 @export var crouch_check: ShapeCast3D
 @export var crouch_offset: float = 0
 @export var crouch_descent_speed: float = 3
 
 @export_category("Jump")
 @export var jump_vel: float = 5
+@export var air_jump_count: int = 3
+
+@export_category("Wall Interaction")
+
+@export var wall_check: ShapeCast3D
+@export var wall_descent_speed: float = -0.5
+@export var gravity_modifier: float = 1
+var is_wall_grabbed: bool = false
 
 
 func _physics_process(delta: float) -> void:
 	# Apply gravity when not on floor
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		velocity += get_gravity() * delta * gravity_modifier
 	
 	var speed_modifier = dash_modifier + crouch_modifier + slide_modifier
 	speed = default_speed + speed_modifier
@@ -106,3 +114,10 @@ func uncrouch():
 	
 func jump():
 	velocity.y += jump_vel
+
+func wallgrab():
+	velocity.y = wall_descent_speed
+
+	
+func wallungrab():
+	is_wall_grabbed = false
